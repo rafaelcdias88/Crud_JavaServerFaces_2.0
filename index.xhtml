@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>CRUD Bye</title>
+</h:head>
+<h:body>
+	<p:growl id="growl" showDetail="true" sticky="true" />
+	<h:form id="form_cadastrar">
+
+		<h:panelGrid id="pg_cadastrar">
+
+			<h:outputText value="Nome" />
+			<p:inputText value="#{usuarioController.usuario.uscnome}" />
+
+			<h:outputText value="Login" />
+			<p:inputText value="#{usuarioController.usuario.usclogn}" />
+
+			<h:outputText value="Senha" />
+			<p:inputText value="#{usuarioController.usuario.uscsenh}" />
+
+			<h:outputText value="E-mail" />
+			<p:inputText value="#{usuarioController.usuario.uscmail}" />
+
+
+			<p:commandButton value="Cadastrar" process="pg_cadastrar"
+				update=":form_listar, form_cadastrar"
+				actionListener="#{usuarioController.cadastrarUsuario}" />
+
+		</h:panelGrid>
+
+	</h:form>
+
+
+
+	<h:form id="form_listar">
+
+		<p:dataTable value="#{usuarioController.listaUsuario}" var="lista"
+			editable="true">
+
+			<p:ajax event="rowEdit" listener="#{usuarioController.editar}" />
+
+			<p:column headerText="Login">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{lista.usclogn}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText value="#{lista.usclogn}" />
+					</f:facet>
+
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Nome">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{lista.uscnome}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText value="#{lista.uscnome}" />
+					</f:facet>
+
+				</p:cellEditor>
+			</p:column>
+
+
+			<p:column headerText="E-mail">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{lista.uscmail}" />
+					</f:facet>
+					<f:facet name="input">
+						<h:inputText value="#{lista.uscmail}" />
+					</f:facet>
+
+				</p:cellEditor>
+			</p:column>
+
+			<p:column headerText="Editar">
+
+				<p:rowEditor />
+				<p:commandLink oncomplete="confirmation.show()" update=":form_listar">
+				<f:setPropertyActionListener  value="#{lista}" target="#{usuarioController.usuarioSelecionado}"/>
+					<span class="ui-icon ui-icon-trash"></span>
+				</p:commandLink>
+			</p:column>
+
+
+		</p:dataTable>
+
+		<p:confirmDialog id="confirmDialog"
+			message="Voce tem certeza que deseja Excluir #{usuarioController.usuarioSelecionado.uscnome} ? " header="Confirmação"
+			severity="alert" widgetVar="confirmation">
+				
+
+			<p:commandButton id="confirm" value="Sim" update=":form_listar"
+				oncomplete="confirmation.hide()"
+				actionListener="#{usuarioController.excluir}" />
+			<p:commandButton id="decline" value="Não"
+				onclick="confirmation.hide()" type="button" />
+
+		</p:confirmDialog>
+
+	</h:form>
+
+</h:body>
+</html>
